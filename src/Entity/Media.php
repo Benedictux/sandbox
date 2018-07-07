@@ -32,7 +32,7 @@ class Media
     private $name;
 
     /**
-     * @ORM\Column(type="object")
+     * @ORM\Column(type="string", length=191)
      */
     private $attachment;
 

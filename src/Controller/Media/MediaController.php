@@ -12,10 +12,9 @@ namespace App\Controller\Media;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\Entity\Media;
+use App\Form\MediaType;
+use App\Service\FileUploader;
 
 
 class MediaController extends Controller
@@ -23,17 +22,26 @@ class MediaController extends Controller
     /**
      * @Route("/media", name="media")
      */
-    public function media(Request $request){
+    public function media(Request $request, FileUploader $fileUploader){
 
         $media = new Media ;
-        $media->setName('Media test');
-        dump($media, $request, $this);
+        dump($media, $request, $fileUploader, $this);
 
-        $form = $this->createFormBuilder($media)
-            ->add('name', TextType::class)
-            ->add('attachment', FileType::class)
-            ->add('save', SubmitType::class, ['label' => 'Create Media'])
-            ->getForm();
+        // Construct° du formulaire.
+        $form = $this->createForm(MediaType::class, $media);
+
+        // Capture + traitement de la validat° du formulaire.
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $fileName = $fileUploader->upload($media->getAttachment());
+            $media->setAttachment($fileName);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($media);
+            $em->flush();
+            return $this->redirectToRoute('homepage');
+        }
+
 
         return $this->render('media/media.html.twig', [
             'form' => $form->createView(),
