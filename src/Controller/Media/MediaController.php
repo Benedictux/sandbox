@@ -9,23 +9,37 @@ namespace App\Controller\Media;
 // ------------------------------------------------------------------------------------------------------------------ //
 // Imports.                                                                                                           //
 // ------------------------------------------------------------------------------------------------------------------ //
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Media;
 use App\Form\MediaType;
+use App\Repository\MediaRepository;
 use App\Service\FileUploader;
 
 
-class MediaController extends Controller
+/**
+ * @Route("/media")
+ */
+class MediaController extends AbstractController
 {
     /**
-     * @Route("/media", name="media")
+     * @Route("/index", name="media_index")
      */
-    public function media(Request $request, FileUploader $fileUploader){
+    public function index(MediaRepository $mediasRep){
+        $medias = $mediasRep->findAll();
+        return $this->render('media/index.html.twig', [
+            'medias' => $medias,
+        ]);
+    }
+
+
+    /**
+     * @Route("/upload", name="media_upload")
+     */
+    public function upload(Request $request, FileUploader $fileUploader){
 
         $media = new Media ;
-        dump($media, $request, $fileUploader, $this);
 
         // Construct° du formulaire.
         $form = $this->createForm(MediaType::class, $media);
@@ -34,12 +48,14 @@ class MediaController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $fileName = $fileUploader->upload($media->getAttachment());
+            $fileUploader->makeThumbnails($fileName);
+
             $media->setAttachment($fileName);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($media);
             $em->flush();
-            return $this->redirectToRoute('homepage');
+            return $this->redirectToRoute('media_index');
         }
 
 

@@ -1,0 +1,43 @@
+{# templates/media/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Média - Index
+{% endblock %}
+
+
+{# ------------------------------------------------------ BODY ------------------------------------------------------ #}
+{% block body %}
+    <table>
+        <caption>Médias</caption>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Attachement</th>
+                <th>Aperçue</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for media in medias %}
+                <tr>
+                    <td>{{ media.id }}</td>
+                    <td>{{ media.name }}</td>
+                    <td>{{ media.attachment }}</td>
+                    <td><img src="{{ asset('uploads/thumbnails/') }}{{ media.attachment }}"></td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td><p>Aucun média trouvé !</p></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    <a href="{{ path('media_upload') }}"><button>Charger un média</button></a>
+{% endblock %}
+
+
+{# ----------------------------------------------------- FOOTER ----------------------------------------------------- #}
+{% block footer %}{% endblock %}

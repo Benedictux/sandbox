@@ -6,9 +6,14 @@
  */
 namespace App\Repository;
 
+
+// ------------------------------------------------------------------------------------------------------------------ //
+// Imports.                                                                                                           //
+// ------------------------------------------------------------------------------------------------------------------ //
 use App\Entity\Media;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+
 
 /**
  * @method Media|null find($id, $lockMode = null, $lockVersion = null)
@@ -23,10 +28,22 @@ class MediaRepository extends ServiceEntityRepository
         parent::__construct($registry, Media::class);
     }
 
-//    /**
-//     * @return Media[] Returns an array of Media objects
-//     */
-    /*
+    /**
+     * @return Media[]
+     */
+    public function findById($id): array{
+        $qb = $this->createQueryBuilder('m')
+            ->andWhere('m.id = :id')
+            ->setParameter('id', $id)
+            ->orderBy('m.id')
+            ->getQuery();
+        return $qb->execute();
+    }
+
+
+    /**
+     * @return Media[] Returns an array of Media objects
+     */
     public function findByExampleField($value)
     {
         return $this->createQueryBuilder('m')
@@ -38,7 +55,6 @@ class MediaRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?Media
