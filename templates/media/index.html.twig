@@ -8,31 +8,36 @@
 
 {# ------------------------------------------------------ BODY ------------------------------------------------------ #}
 {% block body %}
-    <table>
-        <caption>Médias</caption>
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Attachement</th>
-                <th>Aperçue</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for media in medias %}
+    {% if medias %}
+        <table>
+            <caption>Médias</caption>
+            <thead>
                 <tr>
-                    <td>{{ media.id }}</td>
-                    <td>{{ media.name }}</td>
-                    <td>{{ media.attachment }}</td>
-                    <td><img src="{{ asset('uploads/thumbnails/') }}{{ media.attachment }}"></td>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Attachement</th>
+                    <th>Aperçue</th>
+                    <th>Actions</th>
                 </tr>
-            {% else %}
-                <tr>
-                    <td><p>Aucun média trouvé !</p></td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for media in medias %}
+                    <tr>
+                        <td>{{ media.id }}</td>
+                        <td>{{ media.name }}</td>
+                        <td>{{ media.attachment }}</td>
+                        <td><a href="{{ path('media_show', { 'id':media.id }) }}"><img src="{{ asset('uploads/thumbnails/') }}{{ media.attachment }}"></td>
+                        <td>
+                            <a href="{{ path('media_delete', { 'id':media.id }) }}"><button>Supprimer</button></a>
+                            <a href="{{ path('media_update', { 'id':media.id }) }}"><button>Modifier</button></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Aucun média trouvé !</p>
+    {% endif %}
 
 
     <a href="{{ path('media_upload') }}"><button>Charger un média</button></a>

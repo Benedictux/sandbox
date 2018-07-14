@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Média - Edition
+{% endblock %}
+
+
+{# ------------------------------------------------------ BODY ------------------------------------------------------ #}
+{% block body %}
+    <h2>Editer un média</h2>
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+{% endblock %}
+
+
+{# ----------------------------------------------------- FOOTER ----------------------------------------------------- #}
+{% block footer %}{% endblock %}

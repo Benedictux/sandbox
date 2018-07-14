@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Media;
 use App\Form\MediaType;
+use App\Form\MediaEditType;
 use App\Repository\MediaRepository;
 use App\Service\FileUploader;
 
@@ -30,6 +31,16 @@ class MediaController extends AbstractController
         $medias = $mediasRep->findAll();
         return $this->render('media/index.html.twig', [
             'medias' => $medias,
+        ]);
+    }
+
+
+    /**
+     * @Route("/show/{id}", name="media_show")
+     */
+    public function show(Media $media){
+        return $this->render('media/show.html.twig', [
+            'media' => $media,
         ]);
     }
 
@@ -58,8 +69,42 @@ class MediaController extends AbstractController
             return $this->redirectToRoute('media_index');
         }
 
+        return $this->render('media/upload.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
 
-        return $this->render('media/media.html.twig', [
+    /**
+     * @Route("/delete/{id}", name="media_delete")
+     */
+    public function delete(Media $media, FileUploader $fileUploader){
+
+        $fileUploader->delete($media->getAttachment());
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($media);
+        $entityManager->flush();
+    }
+
+    /**
+     * @Route("/edit/{id}", name="media_update")
+     */
+    public function edit(Request $request, Media $media){
+
+        // Construct° du formulaire.
+        $form = $this->createForm(MediaEditType::class, $media);
+        $form = $form->remove('attachement');
+
+        // Capture + traitement de la validat° du formulaire.
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+            return $this->redirectToRoute('media_index');
+        }
+
+        return $this->render('media/edit.html.twig', [
             'form' => $form->createView(),
         ]);
     }

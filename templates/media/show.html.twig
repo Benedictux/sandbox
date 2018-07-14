@@ -1,0 +1,16 @@
+{# templates/media/show.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Média
+{% endblock %}
+
+
+{# ------------------------------------------------------ BODY ------------------------------------------------------ #}
+{% block body %}
+    <img src="{{ asset('uploads/') }}{{ media.attachment }}">
+{% endblock %}
+
+
+{# ----------------------------------------------------- FOOTER ----------------------------------------------------- #}
+{% block footer %}{% endblock %}

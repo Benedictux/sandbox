@@ -26,16 +26,19 @@ class FileUploader{
     // -------------
     public function __construct($targetDirectory){
         $this->targetDirectory = $targetDirectory;
+        $this->createUploadsDirectory();
+        $this->createThumbnailsDirectory();
     }
-    // Récupérat°, à la construction, du dossier de stockage (en parameters: uploads_directory).
+
+    // Getter & Setter
     public function getTargetDirectory(){
         return $this->targetDirectory;
     }
-    // Récupérat°, à la construction, du dossier de stockage (en parameters: uploads_directory).
+
     public function getExtension(){
         return $this->extension;
     }
-    // Récupérat°, à la construction, du dossier de stockage (en parameters: uploads_directory).
+
     public function setExtension($extension){
         $this->extension = $extension;
         return $this;
@@ -44,6 +47,20 @@ class FileUploader{
 
     // Méthodes.
     // ---------
+    // Ctrl existence du dossier uploads.
+    private function createUploadsDirectory(){
+        if(!is_dir($this->getTargetDirectory())){
+        mkdir($this->getTargetDirectory());
+        }
+    }
+
+    // Ctrl existence du dossier uploads/thumbnails.
+    private function createThumbnailsDirectory(){
+        if(!is_dir($this->getTargetDirectory()."thumbnails/")){
+            mkdir($this->getTargetDirectory()."thumbnails/");
+        }
+    }
+
     // Créat° d'un nom unique + stockage dans le dossier paramétré.
     public function upload(UploadedFile $file){
         $this->setExtension($file->guessExtension());
@@ -54,8 +71,20 @@ class FileUploader{
         return $fileName;
     }
 
+    // Supress° du fichier
+    public function delete($filename){
+
+        // Construct°  URL du media.
+        $urlFile = $this->getTargetDirectory().$filename;
+        unlink($urlFile);
+
+        // Construct°  URL du Thumbnails.
+        $urlThumb = $this->getTargetDirectory()."thumbnails/".$filename;
+        unlink($urlThumb);
+    }
+
     // Créat° d'un Thumbnails.
-    public function makeThumbnails( $filename)
+    public function makeThumbnails($filename)
     {
         // Construct° de l'extens°.
         $ext =$this->getExtension();
