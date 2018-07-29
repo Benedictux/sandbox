@@ -1,0 +1,70 @@
+{% block stylesheets %}
+    <link href="{{ asset('build/css/editeur.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block editeur %}
+
+    {# Barre d'outils #}
+    <div id="toolbar">
+        <table>
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                <select onchange="commande('heading', this.value); this.selectedIndex = 0;">
+                                    <option value="">Titre</option>
+                                    <option value="h1">Titre 1</option>
+                                    <option value="h2">Titre 2</option>
+                                    <option value="h3">Titre 3</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select onchange="commande('forecolor', this.value);this.selectedIndex = 0;">
+                                    <option value="">Couleur</option>
+                                    <option id="sltFirebrick" value="Firebrick">Firebrick</option>
+                                    <option id="sltCornflowerblue" value="cornflowerblue">Cornflowerblue</option>
+                                    <option id="sltOlivedrab" value="Olivedrab">Olivedrab</option>
+                                </select>
+                            </td>
+                            <td><input id="btn_bold" type="button" value="G" onclick="commande('bold');"/></td>
+                            <td><input id="btn_italic" type="button" value="I" onclick="commande('italic');"/></td>
+                            <td><input id="btn_underline" type="button" value="S" onclick="commande('underline');"/></td>
+                            <td><input id="btn_link" type="button" value="Lien" onclick="commande('createLink');"/></td>
+                            <td><input id="btn_unlink" type="button" value="Lien" onclick="commande('unlink');"/></td>
+                            <td><input id="btn_image" type="button" value="Image" onclick="commande('insertImage');"/></td>
+                            <td><input id="btn_unOrderedList" type="button" value="*" onclick="commande('insertunorderedlist');"/></td>
+                            <td><input id="btn_orderedList" type="button" value="1" onclick="commande('insertorderedlist');"/></td>
+                            <td><input id="btn_horizontalRule" type="button" value="-" onclick="commande('inserthorizontalrule');"/></td>
+                            <td><input id="btn_indent" type="button" value="->" onclick="commande('indent');"/></td>
+                            <td><input id="btn_outdent" type="button" value="<-" onclick="commande('outdent');"/></td>
+                            <td><input id="btn_undo" type="button" value="undo" onclick="commande('undo');"/></td>
+                            <td><input id="btn_redo" type="button" value="redo" onclick="commande('redo');"/></td>
+                            <td><input id="btn_paragraph" type="button" value="p" onclick="commande('insertparagraph');"/></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            {#<tr>#}
+                {#<td>#}
+                    {#<table>#}
+                        {#<tr>#}
+                            {#<td></td>#}
+                        {#</tr>#}
+                    {#</table>#}
+                {#</td>#}
+            {#</tr>#}
+        </table>
+    </div>
+    {# Editeur #}
+    <div id="editor" contentEditable="true" onclick="btnOnOff();" onkeydown="btnOnOff();" ></div>
+
+    {# HTML #}
+    <input type="button" onclick="resultatHTML();" value="Obtenir le HTML" /><br />
+    <textarea id="result"></textarea>
+{% endblock %}
+
+{% block javascripts %}
+<script src="build/js/editeur.js"></script>
+{% endblock %}
